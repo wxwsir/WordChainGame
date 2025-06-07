@@ -10,9 +10,6 @@ import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Upload, Play, RotateCcw, Volume2, VolumeX } from "lucide-react"
 
-import fs from 'fs';
-import path from 'path';
-
 interface Word {
   word: string
   definition: string
@@ -21,13 +18,13 @@ interface Word {
 const loadWordsFromTxt = async () => {
   try {
     const wordFiles = [
-      '1 初中-乱序.txt',
-      '2 高中-乱序.txt',
-      '3 四级-乱序.txt',
-      '4 六级-乱序.txt',
-      '5 考研-乱序.txt',
-      '6 托福-乱序.txt',
-      '7 SAT-乱序.txt'
+      '1.txt',
+      '2.txt',
+      '3.txt',
+      '4.txt',
+      '5.txt',
+      '6.txt',
+      '7.txt'
     ];
 
     const allWords: Word[] = [];
