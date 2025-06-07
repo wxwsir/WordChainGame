@@ -20,13 +20,38 @@ interface Word {
 
 const loadWordsFromTxt = async () => {
   try {
-    const response = await fetch('/words/1 初中-乱序.txt');
-    const text = await response.text();
-    // 解析文本为单词数组
-    return text.split('\n').map(line => {
-      const [word, definition] = line.split('\t');
-      return { word, definition };
-    });
+    const wordFiles = [
+      '1 初中-乱序.txt',
+      '2 高中-乱序.txt',
+      '3 四级-乱序.txt',
+      '4 六级-乱序.txt',
+      '5 考研-乱序.txt',
+      '6 托福-乱序.txt',
+      '7 SAT-乱序.txt'
+    ];
+
+    const allWords: Word[] = [];
+    
+    for (const file of wordFiles) {
+      try {
+        const encodedFile = encodeURIComponent(file);
+        const response = await fetch(`/words/${encodedFile}`);
+        const text = await response.text();
+        const words = text.split('\n')
+          .filter(line => line.trim())
+          .map(line => {
+            const [word, definition] = line.split('\t');
+            return { word: word?.trim() || '', definition: definition?.trim() || '' };
+          })
+          .filter(word => word.word);
+        
+        allWords.push(...words);
+      } catch (error) {
+        console.error(`加载词库文件 ${file} 失败:`, error);
+      }
+    }
+    
+    return allWords;
   } catch (error) {
     console.error('加载词库失败:', error);
     return [];
