@@ -18,24 +18,20 @@ interface Word {
   definition: string
 }
 
-function loadWordsFromTxt(): Word[] {
-  const wordsDir = path.join(process.cwd(), 'words');
-  const files = fs.readdirSync(wordsDir).filter(file => file.endsWith('.txt'));
-  
-  let allWords: Word[] = [];
-  
-  files.forEach(file => {
-    const filePath = path.join(wordsDir, file);
-    const content = fs.readFileSync(filePath, 'utf-8');
-    const words = content.split('\n').map(line => {
+const loadWordsFromTxt = async () => {
+  try {
+    const response = await fetch('/words/1 初中-乱序.txt');
+    const text = await response.text();
+    // 解析文本为单词数组
+    return text.split('\n').map(line => {
       const [word, definition] = line.split('\t');
       return { word, definition };
     });
-    allWords = [...allWords, ...words];
-  });
-  
-  return allWords;
-}
+  } catch (error) {
+    console.error('加载词库失败:', error);
+    return [];
+  }
+};
 
 const defaultWords: Word[] = loadWordsFromTxt();
 
