@@ -56,8 +56,6 @@ const loadWordsFromTxt = async () => {
   }
 };
 
-const defaultWords: Word[] = loadWordsFromTxt();
-
 const WORDS_STORAGE_KEY = "word-chain-game-words"
 
 export default function WordChainGame() {
@@ -90,15 +88,16 @@ export default function WordChainGame() {
         setWords(parsedWords)
       } catch (error) {
         console.error("Failed to parse saved words:", error)
+        // 使用已加载的defaultWords而不是直接调用异步函数
         setWords(defaultWords)
         localStorage.setItem(WORDS_STORAGE_KEY, JSON.stringify(defaultWords))
       }
     } else {
-      // 首次使用，保存默认词库
+      // 使用已加载的defaultWords
       setWords(defaultWords)
       localStorage.setItem(WORDS_STORAGE_KEY, JSON.stringify(defaultWords))
     }
-  }, [])
+  }, [defaultWords])  // 添加defaultWords作为依赖
 
   const playSound = (frequency: number, duration: number, type: "correct" | "error" | "type" = "type") => {
     if (!soundEnabled || !audioContextRef.current) return
@@ -468,3 +467,18 @@ export default function WordChainGame() {
     </div>
   )
 }
+
+// 修改defaultWords为异步获取方式
+const [defaultWords, setDefaultWords] = useState<Word[]>([])
+
+useEffect(() => {
+  const loadDefaultWords = async () => {
+    const words = await loadWordsFromTxt()
+    setDefaultWords(words)
+    // 如果localStorage中没有词库，则保存默认词库
+    if (!localStorage.getItem(WORDS_STORAGE_KEY)) {
+      localStorage.setItem(WORDS_STORAGE_KEY, JSON.stringify(words))
+    }
+  }
+  loadDefaultWords()
+}, [])
