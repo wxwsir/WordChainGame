@@ -31,8 +31,7 @@ const loadWordsFromTxt = async () => {
     
     for (const file of wordFiles) {
       try {
-        const encodedFile = encodeURIComponent(file);
-        const response = await fetch(`/words/${encodedFile}`);
+        const response = await fetch(`/words/${file}`);
         const text = await response.text();
         const words = text.split('\n')
           .filter(line => line.trim())
