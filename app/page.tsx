@@ -31,7 +31,9 @@ const loadWordsFromTxt = async () => {
     
     for (const file of wordFiles) {
       try {
-        const response = await fetch(`/words/${file}`);
+        // 在Vercel环境中使用绝对URL
+        const baseUrl = 'https://v0-word-chain-game-git-dev-wxw550w-163coms-projects.vercel.app';
+        const response = await fetch(`${baseUrl}/words/${file}`);
         const text = await response.text();
         const words = text.split('\n')
           .filter(line => line.trim())
